@@ -6,17 +6,11 @@ namespace Locastic\SymfonyTranslationBundle\TranslationMigration;
 
 use Locastic\SymfonyTranslationBundle\Model\Translation;
 use Locastic\SymfonyTranslationBundle\Model\TranslationValue;
-use ReflectionClass;
-
-use function str_replace;
 
 abstract class AbstractTranslationMigration
 {
-    protected ExecutorInterface $migrationExecutor;
-
-    public function __construct(ExecutorInterface $migrationExecutor)
+    public function __construct(protected ExecutorInterface $migrationExecutor)
     {
-        $this->migrationExecutor = $migrationExecutor;
     }
 
     abstract public function up(): void;
@@ -26,7 +20,7 @@ abstract class AbstractTranslationMigration
         string $domain,
         string $localeCode,
         string $value,
-        string $theme
+        string $theme,
     ): void {
         $translation = new Translation();
         $translation->setDomainName($domain);
@@ -44,7 +38,7 @@ abstract class AbstractTranslationMigration
 
     public function getVersionNumber(): string
     {
-        $reflectionClass = new ReflectionClass(get_class($this));
+        $reflectionClass = new \ReflectionClass(static::class);
 
         return str_replace('Version', '', $reflectionClass->getShortName());
     }

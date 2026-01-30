@@ -14,30 +14,10 @@ use Locastic\SymfonyTranslationBundle\Utils\ArrayUtils;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
-use function array_key_exists;
-use function array_replace_recursive;
-use function is_string;
-
-final class TranslationValueSaver implements TranslationValueSaverInterface
+final readonly class TranslationValueSaver implements TranslationValueSaverInterface
 {
-    private string $directory;
-
-    private TranslationFileNameProviderInterface $translationFileNameProvider;
-
-    private TranslationFilePathProviderInterface $translationFilePathProvider;
-
-    private TranslationsProviderInterface $translationsProvider;
-
-    public function __construct(
-        string $directory,
-        TranslationFileNameProviderInterface $translationFileNameProvider,
-        TranslationFilePathProviderInterface $translationFilePathProvider,
-        TranslationsProviderInterface $translationsProvider
-    ) {
-        $this->directory = $directory;
-        $this->translationFileNameProvider = $translationFileNameProvider;
-        $this->translationFilePathProvider = $translationFilePathProvider;
-        $this->translationsProvider = $translationsProvider;
+    public function __construct(private string $directory, private TranslationFileNameProviderInterface $translationFileNameProvider, private TranslationFilePathProviderInterface $translationFilePathProvider, private TranslationsProviderInterface $translationsProvider)
+    {
     }
 
     /**
@@ -60,8 +40,8 @@ final class TranslationValueSaver implements TranslationValueSaverInterface
             // just add new value if it does not exist in the original translations
             $newTranslations = $existingTranslations;
 
-            if (!array_key_exists($translation->getKey(), $existingTranslations)
-                || !array_key_exists($translationValue->getLocaleCode(), $existingTranslations[$translation->getKey()])
+            if (!\array_key_exists($translation->getKey(), $existingTranslations)
+                || !\array_key_exists($translationValue->getLocaleCode(), $existingTranslations[$translation->getKey()])
             ) {
                 $newTranslations[$translation->getKey()][$translationValue->getLocaleCode()] = $translationValue->getValue();
             }
@@ -72,10 +52,10 @@ final class TranslationValueSaver implements TranslationValueSaverInterface
 
         $result = [];
         foreach ($newTranslations as $newTranslationKey => $newTranslation) {
-            if (!array_key_exists($translationValue->getLocaleCode(), $newTranslation)) {
+            if (!\array_key_exists($translationValue->getLocaleCode(), $newTranslation)) {
                 continue;
             }
-            if (!is_string($newTranslation[$translationValue->getLocaleCode()])) {
+            if (!\is_string($newTranslation[$translationValue->getLocaleCode()])) {
                 continue;
             }
             $result = array_replace_recursive($result, ArrayUtils::keyToArray($newTranslationKey, $newTranslation[$translationValue->getLocaleCode()]));
@@ -99,7 +79,7 @@ final class TranslationValueSaver implements TranslationValueSaverInterface
         foreach ($translations as $translation) {
             foreach ($translation->getValues() as $translationValue) {
                 $fileName = $this->translationFileNameProvider->getFileName($translationValue);
-                if (!array_key_exists($fileName, $files)) {
+                if (!\array_key_exists($fileName, $files)) {
                     $files[$fileName] = [];
                 }
 

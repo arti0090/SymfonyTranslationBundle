@@ -6,13 +6,10 @@ namespace Locastic\SymfonyTranslationBundle\Provider;
 
 use Locastic\SymfonyTranslationBundle\Model\TranslationValueInterface;
 
-final class TranslationFilePathProvider implements TranslationFilePathProviderInterface
+final readonly class TranslationFilePathProvider implements TranslationFilePathProviderInterface
 {
-    private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider;
-
-    public function __construct(DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider)
+    public function __construct(private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider)
     {
-        $this->defaultTranslationDirectoryProvider = $defaultTranslationDirectoryProvider;
     }
 
     public function getFilePath(TranslationValueInterface $translationValue): string

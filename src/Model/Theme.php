@@ -6,14 +6,8 @@ namespace Locastic\SymfonyTranslationBundle\Model;
 
 class Theme implements ThemeInterface
 {
-    protected string $name;
-
-    protected string $path;
-
-    public function __construct(string $name, string $path)
+    public function __construct(protected string $name, protected string $path)
     {
-        $this->name = $name;
-        $this->path = $path;
     }
 
     public function getName(): string

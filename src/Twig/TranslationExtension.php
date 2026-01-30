@@ -11,17 +11,14 @@ use Twig\TwigFilter;
 
 final class TranslationExtension extends AbstractExtension
 {
-    private TranslationValueToFormFieldTransformerInterface $translationValueToFormFieldTransformer;
-
-    public function __construct(TranslationValueToFormFieldTransformerInterface $translationValueToFormFieldTransformer)
+    public function __construct(private readonly TranslationValueToFormFieldTransformerInterface $translationValueToFormFieldTransformer)
     {
-        $this->translationValueToFormFieldTransformer = $translationValueToFormFieldTransformer;
     }
 
     public function getFilters(): iterable
     {
         return [
-            new TwigFilter('locastic_symfony_translation_value_field_name', [$this, 'getTranslationValueFieldName'])
+            new TwigFilter('locastic_symfony_translation_value_field_name', $this->getTranslationValueFieldName(...)),
         ];
     }
 

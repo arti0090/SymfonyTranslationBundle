@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Locastic\SymfonyTranslationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;

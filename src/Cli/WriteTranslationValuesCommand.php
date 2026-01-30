@@ -11,40 +11,21 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function sprintf;
-
 final class WriteTranslationValuesCommand extends Command
 {
-    /** @var string */
-    public static $defaultName = 'locastic:symfony-translation:dump-all';
-
-    private TranslationsProviderInterface $translationsProvider;
-
-    private TranslationKeyToTranslationTransformerInterface $translationTransformer;
-
-    private TranslationValueSaverInterface $translationValueSaver;
-
-    private string $localeCode;
-
-    private array $locales;
+    public static string $defaultName = 'locastic:symfony-translation:dump-all';
 
     protected OutputInterface $output;
 
     public function __construct(
-        TranslationsProviderInterface $translationsProvider,
-        TranslationKeyToTranslationTransformerInterface $translationTransformer,
-        TranslationValueSaverInterface $translationValueSaver,
-        string $localeCode,
-        array $locales,
-        string $name = null
+        private readonly TranslationsProviderInterface $translationsProvider,
+        private readonly TranslationKeyToTranslationTransformerInterface $translationTransformer,
+        private readonly TranslationValueSaverInterface $translationValueSaver,
+        private readonly string $localeCode,
+        private readonly array $locales,
+        ?string $name = null,
     ) {
         parent::__construct($name);
-
-        $this->translationsProvider = $translationsProvider;
-        $this->translationTransformer = $translationTransformer;
-        $this->translationValueSaver = $translationValueSaver;
-        $this->localeCode = $localeCode;
-        $this->locales = $locales;
     }
 
     protected function configure(): void
@@ -73,6 +54,6 @@ final class WriteTranslationValuesCommand extends Command
 
     protected function writeLn(string $message, int $level = OutputInterface::OUTPUT_NORMAL): void
     {
-        $this->output->writeln(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), $level);
+        $this->output->writeln(\sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), $level);
     }
 }
