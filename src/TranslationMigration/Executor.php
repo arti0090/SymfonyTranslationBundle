@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Locastic\SymfonyTranslationBundle\TranslationMigration;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
 use Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactoryInterface;
 use Locastic\SymfonyTranslationBundle\Model\Translation;
 use Locastic\SymfonyTranslationBundle\Model\TranslationMigrationInterface;
@@ -16,20 +15,8 @@ final class Executor implements ExecutorInterface
     /** @var Translation[] */
     private array $translations = [];
 
-    private TranslationValueSaverInterface $translationValueSaver;
-
-    private TranslationMigrationFactoryInterface $translationMigrationFactory;
-
-    private ManagerRegistry $managerRegistry;
-
-    public function __construct(
-        TranslationValueSaverInterface $translationValueSaver,
-        TranslationMigrationFactoryInterface $translationMigrationFactory,
-        ManagerRegistry $managerRegistry
-    ) {
-        $this->translationValueSaver = $translationValueSaver;
-        $this->translationMigrationFactory = $translationMigrationFactory;
-        $this->managerRegistry = $managerRegistry;
+    public function __construct(private readonly TranslationValueSaverInterface $translationValueSaver, private readonly TranslationMigrationFactoryInterface $translationMigrationFactory, private readonly ManagerRegistry $managerRegistry)
+    {
     }
 
     public function addTranslation(Translation $translation): void
@@ -46,7 +33,7 @@ final class Executor implements ExecutorInterface
     {
         try {
             $this->executeMigration($migration, $resync);
-        } catch (Exception $exception) {
+        } catch (\Exception) {
             $this->skipMigration($migration);
         }
     }

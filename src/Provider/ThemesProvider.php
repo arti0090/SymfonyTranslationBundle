@@ -7,18 +7,10 @@ namespace Locastic\SymfonyTranslationBundle\Provider;
 use Locastic\SymfonyTranslationBundle\Factory\ThemeFactoryInterface;
 use Locastic\SymfonyTranslationBundle\Model\ThemeInterface;
 
-final class ThemesProvider implements ThemesProviderInterface
+final readonly class ThemesProvider implements ThemesProviderInterface
 {
-    private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider;
-
-    private ThemeFactoryInterface $themeFactory;
-
-    public function __construct(
-        DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider,
-        ThemeFactoryInterface $themeFactory
-    ) {
-        $this->defaultTranslationDirectoryProvider = $defaultTranslationDirectoryProvider;
-        $this->themeFactory = $themeFactory;
+    public function __construct(private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider, private ThemeFactoryInterface $themeFactory)
+    {
     }
 
     public function getAll(): array

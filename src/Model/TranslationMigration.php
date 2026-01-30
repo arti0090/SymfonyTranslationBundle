@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Locastic\SymfonyTranslationBundle\Model;
 
-use DateTime;
-
 class TranslationMigration implements TranslationMigrationInterface
 {
     protected ?int $id = null;
 
     protected ?string $number = null;
 
-    protected ?DateTime $createdAt = null;
+    protected ?\DateTime $createdAt = null;
 
     public function getId(): ?int
     {
@@ -29,12 +27,12 @@ class TranslationMigration implements TranslationMigrationInterface
         $this->number = $number;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(?DateTime $createdAt): void
+    public function setCreatedAt(?\DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }

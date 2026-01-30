@@ -40,9 +40,7 @@ class Translation implements TranslationInterface
 
     public function getValuesByTheme(string $themeName): array
     {
-        return \array_filter($this->getValues(), function (TranslationValueInterface $translationValue) use ($themeName): bool {
-            return $themeName === $translationValue->getTheme();
-        });
+        return array_filter($this->getValues(), static fn (TranslationValueInterface $translationValue): bool => $themeName === $translationValue->getTheme());
     }
 
     public function getKeyByLocaleAndTheme(string $localeCode, string $themeName): ?int
@@ -63,7 +61,7 @@ class Translation implements TranslationInterface
 
     public function hasValue(TranslationValueInterface $translationValue): bool
     {
-        return $this->hasLocaleAndTheme($translationValue->getLocaleCode(), $translationValue->getTheme()) !== null;
+        return null !== $this->hasLocaleAndTheme($translationValue->getLocaleCode(), $translationValue->getTheme());
     }
 
     public function addValue(TranslationValueInterface $translationValue): void

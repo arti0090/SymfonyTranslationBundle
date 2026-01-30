@@ -4,55 +4,27 @@ declare(strict_types=1);
 
 namespace Locastic\SymfonyTranslationBundle\Provider;
 
-use InvalidArgumentException;
 use Locastic\SymfonyTranslationBundle\Utils\ArrayUtils;
-use LogicException;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\Yaml\Yaml;
 
-use function array_key_exists;
-use function array_key_first;
-use function array_replace_recursive;
-use function in_array;
-
-final class TranslationsProvider implements TranslationsProviderInterface
+final readonly class TranslationsProvider implements TranslationsProviderInterface
 {
-    private array $bundles;
-
-    private TranslationDomainsProviderInterface $translationDomainsProvider;
-
-    private LocalesProviderInterface $localesProvider;
-
-    private FileLocator $fileLocator;
-
-    private TranslationFileNameProviderInterface $translationFileNameProvider;
-
-    private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider;
-
-    private ThemesProviderInterface $themesProvider;
-
     public function __construct(
-        array $enabledBundles,
-        TranslationDomainsProviderInterface $translationDomainsProvider,
-        LocalesProviderInterface $localesProvider,
-        FileLocator $fileLocator,
-        TranslationFileNameProviderInterface $translationFileNameProvider,
-        DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider,
-        ThemesProviderInterface $themesProvider
+        private array $enabledBundles,
+        private TranslationDomainsProviderInterface $translationDomainsProvider,
+        private LocalesProviderInterface $localesProvider,
+        private FileLocator $fileLocator,
+        private TranslationFileNameProviderInterface $translationFileNameProvider,
+        private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider,
+        private ThemesProviderInterface $themesProvider,
     ) {
-        $this->bundles = $enabledBundles;
-        $this->translationDomainsProvider = $translationDomainsProvider;
-        $this->localesProvider = $localesProvider;
-        $this->fileLocator = $fileLocator;
-        $this->translationFileNameProvider = $translationFileNameProvider;
-        $this->defaultTranslationDirectoryProvider = $defaultTranslationDirectoryProvider;
-        $this->themesProvider = $themesProvider;
     }
 
     public function getTranslations(string $defaultLocaleCode, array $locales): array
     {
         $bundleTranslations = [];
-        foreach ($this->bundles as $bundleName => $bundle) {
+        foreach ($this->enabledBundles as $bundleName => $bundle) {
             $bundleTranslations = array_replace_recursive(
                 $bundleTranslations,
                 $this->getBundleTranslations($bundleName, $defaultLocaleCode, $locales)
@@ -107,7 +79,7 @@ final class TranslationsProvider implements TranslationsProviderInterface
                 $translations = $this->getYamlTranslations($directory, $domain, $defaultLocale);
                 $translations = array_replace_recursive($translations, $this->getXmlTranslations($directory, $domain, $defaultLocale));
 
-                if (!array_key_exists($domain, $directoryTranslations)) {
+                if (!\array_key_exists($domain, $directoryTranslations)) {
                     $directoryTranslations[$domain] = [];
                 }
                 $translations = ArrayUtils::arrayFlatten($translations);
@@ -124,7 +96,7 @@ final class TranslationsProvider implements TranslationsProviderInterface
                     $translations = $this->getYamlTranslations($directory, $domain, $availableLocale);
                     $translations = array_replace_recursive($translations, $this->getXmlTranslations($directory, $domain, $availableLocale));
 
-                    if (!array_key_exists($domain, $directoryTranslations)) {
+                    if (!\array_key_exists($domain, $directoryTranslations)) {
                         continue;
                     }
                     $translations = ArrayUtils::arrayFlatten($translations);
@@ -141,10 +113,10 @@ final class TranslationsProvider implements TranslationsProviderInterface
     public function doesBundleHaveTranslations(string $bundleName): bool
     {
         try {
-            $this->fileLocator->locate(sprintf('@%s/Resources/translations/', $bundleName));
+            $this->fileLocator->locate(\sprintf('@%s/Resources/translations/', $bundleName));
 
             return true;
-        } catch (InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException) {
             return false;
         }
     }
@@ -155,7 +127,7 @@ final class TranslationsProvider implements TranslationsProviderInterface
             return null;
         }
 
-        return $this->fileLocator->locate(sprintf('@%s/Resources/translations/', $bundleName));
+        return $this->fileLocator->locate(\sprintf('@%s/Resources/translations/', $bundleName));
     }
 
     public function getYamlTranslations(string $directory, string $domain, string $locale): array
@@ -179,7 +151,7 @@ final class TranslationsProvider implements TranslationsProviderInterface
 
         switch ($type) {
             case self::TYPE_XML:
-                throw new LogicException('This has not been implemented yet');
+                throw new \LogicException('This has not been implemented yet');
             case self::TYPE_YAML:
             default:
                 return Yaml::parse(file_get_contents($filePath));
@@ -202,9 +174,9 @@ final class TranslationsProvider implements TranslationsProviderInterface
     private function fillMissingKeys(array $translations, array $locales): array
     {
         foreach ($translations as $key => $value) {
-            if (in_array(array_key_first($value), $locales)) {
+            if (\in_array(array_key_first($value), $locales)) {
                 foreach ($locales as $locale) {
-                    if (!array_key_exists($locale, $value)) {
+                    if (!\array_key_exists($locale, $value)) {
                         $translations[$key][$locale] = '';
                     }
                 }
@@ -221,7 +193,7 @@ final class TranslationsProvider implements TranslationsProviderInterface
         foreach ($translations as $key => $value) {
             if (empty($value)) {
                 unset($translations[$key]);
-            } elseif (is_array($value)) {
+            } elseif (\is_array($value)) {
                 $translations[$key] = $this->removeEmptyKeys($value);
             }
         }
@@ -234,11 +206,11 @@ final class TranslationsProvider implements TranslationsProviderInterface
         $keys = [];
         foreach ($translations as $themeTranslations) {
             foreach ($themeTranslations as $domain => $domainTranslations) {
-                if (!array_key_exists($domain, $keys)) {
+                if (!\array_key_exists($domain, $keys)) {
                     $keys[$domain] = [];
                 }
                 foreach ($domainTranslations as $key => $keyTranslations) {
-                    if (!in_array($key, $keys)) {
+                    if (!\in_array($key, $keys)) {
                         $keys[$domain][] = $key;
                     }
                 }
@@ -252,7 +224,7 @@ final class TranslationsProvider implements TranslationsProviderInterface
         foreach ($translations as $themeName => $themeTranslations) {
             foreach ($themeTranslations as $domain => $domainTranslations) {
                 foreach ($keys[$domain] as $key) {
-                    if (!array_key_exists($key, $domainTranslations)) {
+                    if (!\array_key_exists($key, $domainTranslations)) {
                         $translations[$themeName][$domain][$key] = $translationTemplate;
                     }
                 }

@@ -8,8 +8,6 @@ use Locastic\SymfonyTranslationBundle\Model\Translation;
 use Locastic\SymfonyTranslationBundle\Model\TranslationValue;
 use Locastic\SymfonyTranslationBundle\Model\TranslationValueInterface;
 
-use function sprintf;
-
 final class TranslationValueToFormFieldTransformer implements TranslationValueToFormFieldTransformerInterface
 {
     public function transform(TranslationValueInterface $translationValue): string
@@ -19,7 +17,7 @@ final class TranslationValueToFormFieldTransformer implements TranslationValueTo
             return '';
         }
 
-        return sprintf(
+        return \sprintf(
             '[%s][%s][%s][%s]',
             $translationValue->getTheme(),
             $translation->getDomainName(),

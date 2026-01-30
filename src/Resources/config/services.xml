@@ -29,7 +29,9 @@
 
         <service id="Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactory" />
         <service id="Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactoryInterface"
-                 alias="Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactory" />
+                 alias="Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactory"
+                 public="true"
+        />
 
         <!-- Finder -->
         <service id="locastic_symfony_translation.finder.migrations" class="Doctrine\Migrations\Finder\GlobFinder" />

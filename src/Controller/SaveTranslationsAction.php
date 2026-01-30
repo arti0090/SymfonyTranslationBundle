@@ -9,18 +9,10 @@ use Locastic\SymfonyTranslationBundle\Transformer\TranslationValueToFormFieldTra
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class SaveTranslationsAction
+final readonly class SaveTranslationsAction
 {
-    private TranslationValueToFormFieldTransformerInterface $translationValueToFormTransformer;
-
-    private TranslationValueSaverInterface $translationValueSaver;
-
-    public function __construct(
-        TranslationValueToFormFieldTransformerInterface $translationValueToFormTransformer,
-        TranslationValueSaverInterface $translationValueSaver
-    ) {
-        $this->translationValueToFormTransformer = $translationValueToFormTransformer;
-        $this->translationValueSaver = $translationValueSaver;
+    public function __construct(private TranslationValueToFormFieldTransformerInterface $translationValueToFormTransformer, private TranslationValueSaverInterface $translationValueSaver)
+    {
     }
 
     public function __invoke(Request $request): Response

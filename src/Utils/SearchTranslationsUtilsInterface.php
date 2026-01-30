@@ -14,6 +14,6 @@ interface SearchTranslationsUtilsInterface
     public function searchTranslationsFromRequest(
         Request $request,
         SearchTranslation $search,
-        FormInterface $searchForm
+        FormInterface $searchForm,
     ): PagerfantaInterface;
 }

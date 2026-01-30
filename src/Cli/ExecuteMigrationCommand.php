@@ -11,32 +11,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function sprintf;
-
 final class ExecuteMigrationCommand extends Command
 {
-    /** @var string */
-    public static $defaultName = 'locastic:symfony-translation:migration:migrate';
-
-    private GlobFinder $translationFinder;
-
-    private string $translationMigrationDirectory;
-
-    private ExecutorInterface $migrationExecutor;
+    public static string $defaultName = 'locastic:symfony-translation:migration:migrate';
 
     protected OutputInterface $output;
 
     public function __construct(
-        GlobFinder $translationFinder,
-        string $translationMigrationDirectory,
-        ExecutorInterface $migrationExecutor,
-        string $name = null
+        private readonly GlobFinder $translationFinder,
+        private readonly string $translationMigrationDirectory,
+        private readonly ExecutorInterface $migrationExecutor,
+        ?string $name = null,
     ) {
         parent::__construct($name);
-
-        $this->translationFinder = $translationFinder;
-        $this->translationMigrationDirectory = $translationMigrationDirectory;
-        $this->migrationExecutor = $migrationExecutor;
     }
 
     protected function configure(): void
@@ -57,7 +44,7 @@ final class ExecuteMigrationCommand extends Command
 
         $migrations = $this->translationFinder->findMigrations($this->translationMigrationDirectory);
         foreach ($migrations as $value) {
-            $this->writeLn(sprintf('Working with Migration "%s', $value), OutputInterface::VERBOSITY_VERBOSE);
+            $this->writeLn(\sprintf('Working with Migration "%s', $value), OutputInterface::VERBOSITY_VERBOSE);
             $migration = new $value($this->migrationExecutor);
             $resync = $input->getOption('resync');
 
@@ -78,6 +65,6 @@ final class ExecuteMigrationCommand extends Command
 
     protected function writeLn(string $message, int $level = OutputInterface::OUTPUT_NORMAL): void
     {
-        $this->output->writeln(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), $level);
+        $this->output->writeln(\sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), $level);
     }
 }

@@ -8,8 +8,6 @@ use Locastic\SymfonyTranslationBundle\Exception\GenerateTranslationFileNameExcep
 use Locastic\SymfonyTranslationBundle\Exception\TranslationNotFoundException;
 use Locastic\SymfonyTranslationBundle\Model\TranslationValueInterface;
 
-use function sprintf;
-
 final class TranslationFileNameProvider implements TranslationFileNameProviderInterface
 {
     public function getFileName(TranslationValueInterface $translationValue): string
@@ -22,11 +20,11 @@ final class TranslationFileNameProvider implements TranslationFileNameProviderIn
             throw new GenerateTranslationFileNameException();
         }
 
-        return sprintf('%s.%s.yaml', $translationValue->getTranslation()->getDomainName(), $translationValue->getLocaleCode());
+        return \sprintf('%s.%s.yaml', $translationValue->getTranslation()->getDomainName(), $translationValue->getLocaleCode());
     }
 
     public function getFromValues(string $directory, string $domain, string $locale, string $format): string
     {
-        return sprintf('%s%s.%s.%s', $directory, $domain, $locale, $format);
+        return \sprintf('%s%s.%s.%s', $directory, $domain, $locale, $format);
     }
 }
