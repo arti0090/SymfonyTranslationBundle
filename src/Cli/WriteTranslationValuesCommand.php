@@ -7,14 +7,16 @@ namespace Locastic\SymfonyTranslationBundle\Cli;
 use Locastic\SymfonyTranslationBundle\Provider\TranslationsProviderInterface;
 use Locastic\SymfonyTranslationBundle\Saver\TranslationValueSaverInterface;
 use Locastic\SymfonyTranslationBundle\Transformer\TranslationKeyToTranslationTransformerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'locastic:symfony-translation:dump-all'
+)]
 final class WriteTranslationValuesCommand extends Command
 {
-    public static string $defaultName = 'locastic:symfony-translation:dump-all';
-
     protected OutputInterface $output;
 
     public function __construct(
@@ -23,9 +25,8 @@ final class WriteTranslationValuesCommand extends Command
         private readonly TranslationValueSaverInterface $translationValueSaver,
         private readonly string $localeCode,
         private readonly array $locales,
-        ?string $name = null,
     ) {
-        parent::__construct($name);
+        parent::__construct();
     }
 
     protected function configure(): void

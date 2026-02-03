@@ -6,24 +6,25 @@ namespace Locastic\SymfonyTranslationBundle\Cli;
 
 use Doctrine\Migrations\Finder\GlobFinder;
 use Locastic\SymfonyTranslationBundle\TranslationMigration\ExecutorInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'locastic:symfony-translation:migration:migrate'
+)]
 final class ExecuteMigrationCommand extends Command
 {
-    public static string $defaultName = 'locastic:symfony-translation:migration:migrate';
-
     protected OutputInterface $output;
 
     public function __construct(
         private readonly GlobFinder $translationFinder,
         private readonly string $translationMigrationDirectory,
         private readonly ExecutorInterface $migrationExecutor,
-        ?string $name = null,
     ) {
-        parent::__construct($name);
+        parent::__construct();
     }
 
     protected function configure(): void
