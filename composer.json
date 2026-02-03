@@ -18,7 +18,7 @@
     "symfony/translation": "^6.4 || ^7.0",
     "symfony/yaml": "^6.4 || ^7.0",
     "twig/twig": "^3.5",
-    "pagerfanta/pagerfanta": "^4.0",
+    "pagerfanta/pagerfanta": "^3.0",
     "symfony/form": "^6.4 || ^7.0"
   },
   "prefer-stable": true,
